@@ -1,11 +1,18 @@
 import React from 'react';
 import Post from "./Post";
+import {connect} from "react-redux";
+import {setNewPost} from "../redux/actions";
 
-let Posts = ({posts}) => {
-    if (!posts.length) {
+let Posts = ({myPosts}) => {
+    if (!myPosts.length) {
         return <p className='text-center'>No posts</p>
     }
-    return posts.map(post => <Post post={posts} key={posts}/>)
+    return myPosts.map(post => <Post post={post} key={post.id}/>)
 }
 
-export default Posts
+const mapStateToProps = state => {
+    return {myPosts: state.posts.posts}
+}
+
+
+export default connect(mapStateToProps, null)(Posts)
