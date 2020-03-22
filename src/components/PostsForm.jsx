@@ -1,6 +1,7 @@
 import React from 'react';
-import {setNewPost} from "../redux/actions";
+import {setNewPost, showAlert, hideAlert} from "../redux/actions";
 import {connect} from "react-redux";
+import Alert from "./Alert";
 
 class PostForm extends React.Component {
     constructor(props) {
@@ -15,8 +16,8 @@ class PostForm extends React.Component {
 
         const {title} = this.state
 
-        if(!title.trim()){
-            return
+        if (!title.trim()) {
+            return this.props.showAlert('Write your post')
         }
 
         const newPost = {title, id: Date.now().toString()}
@@ -37,6 +38,9 @@ class PostForm extends React.Component {
 
     render() {
         return (<form onSubmit={this.submitHandler}>
+                {
+                    this.props.alert && <Alert text={this.props.alert}/>
+                }
                 <div className="form-group">
                     <label htmlFor="title">Your post</label>
                     <input
@@ -55,7 +59,11 @@ class PostForm extends React.Component {
 }
 
 const mapDispatchToProps = {
-    setNewPost
+    setNewPost,
+    showAlert,
+    hideAlert
 }
 
-export default connect(null, mapDispatchToProps)(PostForm)
+const mapStateToProps = state => ({alert: state.loading.alert})
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostForm)
